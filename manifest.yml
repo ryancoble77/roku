@@ -1,0 +1,7 @@
+---
+applications:
+- name: roku
+  memory: 256M
+  disk_quota: 512M
+  buildpack: python_buildpack
+  command: python server.py
