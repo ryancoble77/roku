@@ -6,6 +6,7 @@ import roku
 import os
 
 # Initialize, read app configuration and setup
+#
 app = Flask(__name__)
 port = int(os.getenv('VCAP_APP_PORT', 8080))
 try:
@@ -95,6 +96,11 @@ def HBO():
     return redirect(url_for('status'))
 
 
+@app.route('/ESPN')
+def ESPN():
+    roku.launchAppByID(rokuUrl, roku.Channels['WatchESPN'])
+    return redirect(url_for('status'))
+
 
 
 # search
@@ -115,6 +121,11 @@ def searchHBO(string):
     roku.searchContent(rokuUrl, string, roku.ContentType['Movie'], roku.Channels['HBO_GO'])
     return redirect(url_for('status'))
 
+@app.route('/searchESPN/<string>')
+def searchESPN(string):
+    roku.searchContent(rokuUrl, string, roku.ContentType['TV'], roku.Channels['WatchESPN'])
+    return redirect(url_for('status'))
+
 
 # Info
 @app.route('/')
@@ -124,11 +135,18 @@ def status():
     return str(returnString)
 
 
-# Info
 @app.route('/apps')
 def apps():
     returnString = roku.getApps(rokuUrl)
     return str(returnString)
+
+
+@app.route('/setIP/<string>')
+def setIP(string):
+    rokuUrl = "http://" + string + ":8060/"
+    returnString = roku.getApps(rokuUrl)
+    return str(returnString)
+
 
 
 # main definition
